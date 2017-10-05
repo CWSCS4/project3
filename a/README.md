@@ -1,7 +1,7 @@
 ## Finished work
 
 - [x] Bit
-- [ ] Register
+- [x] Register
 - [ ] PC
 - [ ] RAM8
 - [ ] RAM64

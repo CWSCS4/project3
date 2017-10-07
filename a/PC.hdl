@@ -17,4 +17,9 @@ CHIP PC {
 
     PARTS:
     // Put your code here:
+    Register(in=in, load=load, out=loadedRegister
+    // handle increment
+    Inc16(in=loadedRegister, out=incremented)
+    
+    Mux4Way16(a=false, b=loadOut, c=incOut, d=prevOut, sel=)
 }

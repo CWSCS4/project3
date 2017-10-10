@@ -4,4 +4,4 @@
 - [x] Register
 - [X] RAM8
 - [X] RAM64
-- [ ] PC
+- [X] PC

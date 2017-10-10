@@ -1,0 +1,44 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/03/a/PC.hdl
+
+/**
+ * A 16-bit counter with load and reset control bits.
+ * if      (reset[t] == 1) out[t+1] = 0
+ * else if (load[t] == 1)  out[t+1] = in[t]
+ * else if (inc[t] == 1)   out[t+1] = out[t] + 1  (integer addition)
+ * else                    out[t+1] = out[t]
+ */
+
+CHIP PC {
+    IN in[16],load,inc,reset;
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+
+    // if supposed to increment or output, set sel[1] to 1
+    Or(a=reset, b=load, out=resetOrLoad);
+    Not(in=resetOrLoad, out=notResetLoad);
+    Or(a=inc, b=notResetLoad, out=sel1);
+
+    // if supposed to load or output, set sel[0] to 1
+    Or(a=reset, b=inc, out=resetOrInc);
+    Not(in=resetOrInc, out=notResetInc);
+    Or(a=load, b=notResetInc, out=sel0);
+
+    // handle incrementing
+    Inc16(in=prevOut, out=incdPrevOut);
+
+    /* 
+    Handle information to be sent to register:
+        - if reset, in=false, load=0, out=false; sel = 00
+        - if load, in=in, load=1, out=load; sel = 01
+        - if inc, in=prevOut + 1, load=0, out=prevOut + 1; sel = 10
+        - else, in=in, load=0, out=prevOut; sel = 11
+    */
+
+    Mux4Way16(a=false, b=in, c=incdPrevOut, d=prevOut, out=registerIn, sel[1]=sel1, sel[0]=sel0);
+    Register(in=registerIn, load=load, out=out, out=prevOut);
+}

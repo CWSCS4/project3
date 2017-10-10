@@ -17,9 +17,23 @@ CHIP PC {
 
     PARTS:
     // Put your code here:
-    Register(in=in, load=load, out=loadedRegister
-    // handle increment
-    Inc16(in=loadedRegister, out=incremented)
-    
-    Mux4Way16(a=false, b=loadOut, c=incOut, d=prevOut, sel=)
+
+    // increment out[t] if needed
+    Inc16(in=prevOut, out=incedIn);
+
+    /*  Allow each argument to set a different pin, and make each pin run accordingly
+        - 000 (a) -> out
+        - 001 (b) -> inc
+        - 010 (c) -> load
+        - 011 (d) -> load
+        - 100 (e) -> reset  
+        - 101 (f) -> reset
+        - 110 (g) -> reset      
+        - 111 (h) -> reset
+    */
+    Mux8Way16(a=prevOut, b=incedIn, c=in, d=in, e=false, f=false, g=false, h=false, sel[2]=reset, sel[1]=load, sel[0]=inc, out=output);
+
+    // always load from the register, as the previous output is already stored.
+    Register(in=output, load=true, out=out, out=prevOut);
+
 }
